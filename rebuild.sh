@@ -17,6 +17,11 @@ else
    exit 1
 fi
 
+if ! command -v python3 >/dev/null 2>&1; then
+   echo "python3 not found. Please install Python 3."
+   exit 1
+fi
+
 if [ ! -f $ORIGINAL_SWAGGER ]; then
    echo "couldn't find $ORIGINAL_SWAGGER (you need to download it manually)"
    exit 1
@@ -67,7 +72,7 @@ cp -a ./${build_dir}/src/* ./src/
 # Re-indexing the generated paths forces git to pick up the actual filenames.
 git rm -r --cached src/apis/ src/models/ src/runtime.ts
 
-#TODO: populate client.ts with all API imports, class defs, and constructors
+python3 scripts/generate_client.py
 
 npm run lint:fix
 npm run format:fix
